@@ -1,0 +1,868 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="OzOkulModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Birimler">
+          <Key>
+            <PropertyRef Name="BirimNo" />
+          </Key>
+          <Property Name="BirimNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BirimAdi" Type="varchar" MaxLength="50" />
+          <Property Name="CalisanSayisi" Type="int" />
+        </EntityType>
+        <EntityType Name="Cocuk">
+          <Key>
+            <PropertyRef Name="CocukNo" />
+          </Key>
+          <Property Name="CocukNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdSoyad" Type="varchar" MaxLength="50" />
+          <Property Name="Cinsiyet" Type="varchar" MaxLength="50" />
+          <Property Name="DogumTarihi" Type="date" />
+          <Property Name="PersonelNo" Type="int" />
+        </EntityType>
+        <EntityType Name="Gorev">
+          <Key>
+            <PropertyRef Name="GorevNo" />
+          </Key>
+          <Property Name="GorevNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GorevTanimi" Type="varchar" MaxLength="50" />
+          <Property Name="GorevAdi" Type="varchar" MaxLength="50" />
+          <Property Name="GorevPuani" Type="int" />
+          <Property Name="BirimNo" Type="int" />
+        </EntityType>
+        <EntityType Name="Personel1">
+          <Key>
+            <PropertyRef Name="PersonelNo" />
+          </Key>
+          <Property Name="PersonelNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdSoyad" Type="varchar" MaxLength="50" />
+          <Property Name="Cinsiyet" Type="varchar" MaxLength="50" />
+          <Property Name="BaslamaTarihi" Type="date" />
+          <Property Name="VardiyaDurumu" Type="varchar" MaxLength="50" />
+          <Property Name="Maas" Type="money" />
+          <Property Name="Prim" Type="int" />
+          <Property Name="GorevNo" Type="int" />
+          <Property Name="UnvanNo" Type="int" />
+        </EntityType>
+        <EntityType Name="Proje">
+          <Key>
+            <PropertyRef Name="ProjeNo" />
+          </Key>
+          <Property Name="ProjeNo" Type="int" Nullable="false" />
+          <Property Name="ProjeAd" Type="varchar" MaxLength="50" />
+          <Property Name="BaslamaTarihi" Type="date" />
+          <Property Name="BitisTarihi" Type="date" />
+          <Property Name="GorevNo" Type="int" />
+        </EntityType>
+        <EntityType Name="Unvanlar">
+          <Key>
+            <PropertyRef Name="UnvanNo" />
+          </Key>
+          <Property Name="UnvanNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UnvanAdi" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Cocuk_Personel">
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="0..1" />
+          <End Role="Cocuk" Type="Self.Cocuk" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personel1">
+              <PropertyRef Name="PersonelNo" />
+            </Principal>
+            <Dependent Role="Cocuk">
+              <PropertyRef Name="PersonelNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Gorev_Birimler">
+          <End Role="Birimler" Type="Self.Birimler" Multiplicity="0..1" />
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Birimler">
+              <PropertyRef Name="BirimNo" />
+            </Principal>
+            <Dependent Role="Gorev">
+              <PropertyRef Name="BirimNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personel_Gorev">
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="0..1" />
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gorev">
+              <PropertyRef Name="GorevNo" />
+            </Principal>
+            <Dependent Role="Personel1">
+              <PropertyRef Name="GorevNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personel_Unvanlar">
+          <End Role="Unvanlar" Type="Self.Unvanlar" Multiplicity="0..1" />
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unvanlar">
+              <PropertyRef Name="UnvanNo" />
+            </Principal>
+            <Dependent Role="Personel1">
+              <PropertyRef Name="UnvanNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proje_Gorev">
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="0..1" />
+          <End Role="Proje" Type="Self.Proje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gorev">
+              <PropertyRef Name="GorevNo" />
+            </Principal>
+            <Dependent Role="Proje">
+              <PropertyRef Name="GorevNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="BAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BirimAdi" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="BEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BirimAdi" Type="varchar" Mode="In" />
+          <Parameter Name="CalisanSayisi" Type="int" Mode="In" />
+        </Function>
+        <Function Name="BListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="BSil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BirimNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="BYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BirimNo" Type="int" Mode="In" />
+          <Parameter Name="BirimAdi" Type="varchar" Mode="In" />
+          <Parameter Name="CalisanSayisi" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+          <Parameter Name="Cinsiyet" Type="varchar" Mode="In" />
+          <Parameter Name="DogumTarihi" Type="date" Mode="In" />
+          <Parameter Name="PersonelNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CSil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CocukNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CocukNo" Type="int" Mode="In" />
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+          <Parameter Name="Cinsiyet" Type="varchar" Mode="In" />
+          <Parameter Name="DogumTarihi" Type="date" Mode="In" />
+          <Parameter Name="PersonelNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GorevTanimi" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GorevTanimi" Type="varchar" Mode="In" />
+          <Parameter Name="GorevAdi" Type="varchar" Mode="In" />
+          <Parameter Name="GorevPuani" Type="int" Mode="In" />
+          <Parameter Name="BirimNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GSil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+          <Parameter Name="GorevTanimi" Type="varchar" Mode="In" />
+          <Parameter Name="GorevAdi" Type="varchar" Mode="In" />
+          <Parameter Name="GorevPuani" Type="int" Mode="In" />
+          <Parameter Name="BirimNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PeAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="PeEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+          <Parameter Name="Cinsiyet" Type="varchar" Mode="In" />
+          <Parameter Name="BaslamaTarihi" Type="date" Mode="In" />
+          <Parameter Name="VardiyaDurumu" Type="varchar" Mode="In" />
+          <Parameter Name="Maas" Type="money" Mode="In" />
+          <Parameter Name="Prim" Type="int" Mode="In" />
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+          <Parameter Name="UnvanNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlanAdi" Type="varchar" Mode="In" />
+          <Parameter Name="PlanBakanlik" Type="varchar" Mode="In" />
+          <Parameter Name="TarimNo" Type="int" Mode="In" />
+          <Parameter Name="PlanSorumlusu" Type="varchar" Mode="In" />
+          <Parameter Name="Plantutanak" Type="varchar" Mode="In" />
+          <Parameter Name="PlanOdenek" Type="money" Mode="In" />
+        </Function>
+        <Function Name="PeListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="PeSil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PersonelNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PeYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PersonelNo" Type="int" Mode="In" />
+          <Parameter Name="AdSoyad" Type="varchar" Mode="In" />
+          <Parameter Name="Cinsiyet" Type="varchar" Mode="In" />
+          <Parameter Name="BaslamaTarihi" Type="date" Mode="In" />
+          <Parameter Name="VardiyaDurumu" Type="varchar" Mode="In" />
+          <Parameter Name="Maas" Type="money" Mode="In" />
+          <Parameter Name="Prim" Type="int" Mode="In" />
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+          <Parameter Name="UnvanNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PrAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProjeAd" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="PrEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProjeAd" Type="varchar" Mode="In" />
+          <Parameter Name="BaslamaTarihi" Type="date" Mode="In" />
+          <Parameter Name="BitisTarihi" Type="date" Mode="In" />
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PrListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="PrSil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProjeNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PrYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProjeNo" Type="int" Mode="In" />
+          <Parameter Name="ProjeAd" Type="varchar" Mode="In" />
+          <Parameter Name="BaslamaTarihi" Type="date" Mode="In" />
+          <Parameter Name="BitisTarihi" Type="date" Mode="In" />
+          <Parameter Name="GorevNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UAra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UnvanAdi" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="UEkle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UnvanAdi" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="UListele" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USil" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UnvanNo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UYenile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UnvanNo" Type="int" Mode="In" />
+          <Parameter Name="UnvanAdi" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="OzOkulModel1StoreContainer">
+          <EntitySet Name="Birimler" EntityType="Self.Birimler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cocuk" EntityType="Self.Cocuk" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gorev" EntityType="Self.Gorev" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Personel1" EntityType="Self.Personel1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Proje" EntityType="Self.Proje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Unvanlar" EntityType="Self.Unvanlar" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cocuk_Personel" Association="Self.FK_Cocuk_Personel">
+            <End Role="Personel1" EntitySet="Personel1" />
+            <End Role="Cocuk" EntitySet="Cocuk" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Gorev_Birimler" Association="Self.FK_Gorev_Birimler">
+            <End Role="Birimler" EntitySet="Birimler" />
+            <End Role="Gorev" EntitySet="Gorev" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personel_Gorev" Association="Self.FK_Personel_Gorev">
+            <End Role="Gorev" EntitySet="Gorev" />
+            <End Role="Personel1" EntitySet="Personel1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personel_Unvanlar" Association="Self.FK_Personel_Unvanlar">
+            <End Role="Unvanlar" EntitySet="Unvanlar" />
+            <End Role="Personel1" EntitySet="Personel1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proje_Gorev" Association="Self.FK_Proje_Gorev">
+            <End Role="Gorev" EntitySet="Gorev" />
+            <End Role="Proje" EntitySet="Proje" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OzOkulModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Birimler">
+          <Key>
+            <PropertyRef Name="BirimNo" />
+          </Key>
+          <Property Name="BirimNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BirimAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CalisanSayisi" Type="Int32" />
+          <NavigationProperty Name="Gorevs" Relationship="Self.FK_Gorev_Birimler" FromRole="Birimler" ToRole="Gorev" />
+        </EntityType>
+        <EntityType Name="Cocuk">
+          <Key>
+            <PropertyRef Name="CocukNo" />
+          </Key>
+          <Property Name="CocukNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Cinsiyet" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DogumTarihi" Type="DateTime" Precision="0" />
+          <Property Name="PersonelNo" Type="Int32" />
+          <NavigationProperty Name="Personel1" Relationship="Self.FK_Cocuk_Personel" FromRole="Cocuk" ToRole="Personel1" />
+        </EntityType>
+        <EntityType Name="Gorev">
+          <Key>
+            <PropertyRef Name="GorevNo" />
+          </Key>
+          <Property Name="GorevNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GorevTanimi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GorevAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GorevPuani" Type="Int32" />
+          <Property Name="BirimNo" Type="Int32" />
+          <NavigationProperty Name="Birimler" Relationship="Self.FK_Gorev_Birimler" FromRole="Gorev" ToRole="Birimler" />
+          <NavigationProperty Name="Personel1" Relationship="Self.FK_Personel_Gorev" FromRole="Gorev" ToRole="Personel1" />
+          <NavigationProperty Name="Projes" Relationship="Self.FK_Proje_Gorev" FromRole="Gorev" ToRole="Proje" />
+        </EntityType>
+        <EntityType Name="Personel1">
+          <Key>
+            <PropertyRef Name="PersonelNo" />
+          </Key>
+          <Property Name="PersonelNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Cinsiyet" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BaslamaTarihi" Type="DateTime" Precision="0" />
+          <Property Name="VardiyaDurumu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Maas" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Prim" Type="Int32" />
+          <Property Name="GorevNo" Type="Int32" />
+          <Property Name="UnvanNo" Type="Int32" />
+          <NavigationProperty Name="Cocuks" Relationship="Self.FK_Cocuk_Personel" FromRole="Personel1" ToRole="Cocuk" />
+          <NavigationProperty Name="Gorev" Relationship="Self.FK_Personel_Gorev" FromRole="Personel1" ToRole="Gorev" />
+          <NavigationProperty Name="Unvanlar" Relationship="Self.FK_Personel_Unvanlar" FromRole="Personel1" ToRole="Unvanlar" />
+        </EntityType>
+        <EntityType Name="Proje">
+          <Key>
+            <PropertyRef Name="ProjeNo" />
+          </Key>
+          <Property Name="ProjeNo" Type="Int32" Nullable="false" />
+          <Property Name="ProjeAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BaslamaTarihi" Type="DateTime" Precision="0" />
+          <Property Name="BitisTarihi" Type="DateTime" Precision="0" />
+          <Property Name="GorevNo" Type="Int32" />
+          <NavigationProperty Name="Gorev" Relationship="Self.FK_Proje_Gorev" FromRole="Proje" ToRole="Gorev" />
+        </EntityType>
+        <EntityType Name="Unvanlar">
+          <Key>
+            <PropertyRef Name="UnvanNo" />
+          </Key>
+          <Property Name="UnvanNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UnvanAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Personel1" Relationship="Self.FK_Personel_Unvanlar" FromRole="Unvanlar" ToRole="Personel1" />
+        </EntityType>
+        <Association Name="FK_Gorev_Birimler">
+          <End Role="Birimler" Type="Self.Birimler" Multiplicity="0..1" />
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Birimler">
+              <PropertyRef Name="BirimNo" />
+            </Principal>
+            <Dependent Role="Gorev">
+              <PropertyRef Name="BirimNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cocuk_Personel">
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="0..1" />
+          <End Role="Cocuk" Type="Self.Cocuk" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personel1">
+              <PropertyRef Name="PersonelNo" />
+            </Principal>
+            <Dependent Role="Cocuk">
+              <PropertyRef Name="PersonelNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personel_Gorev">
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="0..1" />
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gorev">
+              <PropertyRef Name="GorevNo" />
+            </Principal>
+            <Dependent Role="Personel1">
+              <PropertyRef Name="GorevNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proje_Gorev">
+          <End Role="Gorev" Type="Self.Gorev" Multiplicity="0..1" />
+          <End Role="Proje" Type="Self.Proje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gorev">
+              <PropertyRef Name="GorevNo" />
+            </Principal>
+            <Dependent Role="Proje">
+              <PropertyRef Name="GorevNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personel_Unvanlar">
+          <End Role="Unvanlar" Type="Self.Unvanlar" Multiplicity="0..1" />
+          <End Role="Personel1" Type="Self.Personel1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unvanlar">
+              <PropertyRef Name="UnvanNo" />
+            </Principal>
+            <Dependent Role="Personel1">
+              <PropertyRef Name="UnvanNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OzOkulEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Birimlers" EntityType="Self.Birimler" />
+          <EntitySet Name="Cocuks" EntityType="Self.Cocuk" />
+          <EntitySet Name="Gorevs" EntityType="Self.Gorev" />
+          <EntitySet Name="Personel1" EntityType="Self.Personel1" />
+          <EntitySet Name="Projes" EntityType="Self.Proje" />
+          <EntitySet Name="Unvanlars" EntityType="Self.Unvanlar" />
+          <AssociationSet Name="FK_Gorev_Birimler" Association="Self.FK_Gorev_Birimler">
+            <End Role="Birimler" EntitySet="Birimlers" />
+            <End Role="Gorev" EntitySet="Gorevs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cocuk_Personel" Association="Self.FK_Cocuk_Personel">
+            <End Role="Personel1" EntitySet="Personel1" />
+            <End Role="Cocuk" EntitySet="Cocuks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personel_Gorev" Association="Self.FK_Personel_Gorev">
+            <End Role="Gorev" EntitySet="Gorevs" />
+            <End Role="Personel1" EntitySet="Personel1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proje_Gorev" Association="Self.FK_Proje_Gorev">
+            <End Role="Gorev" EntitySet="Gorevs" />
+            <End Role="Proje" EntitySet="Projes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personel_Unvanlar" Association="Self.FK_Personel_Unvanlar">
+            <End Role="Unvanlar" EntitySet="Unvanlars" />
+            <End Role="Personel1" EntitySet="Personel1" />
+          </AssociationSet>
+          <FunctionImport Name="BAra" ReturnType="Collection(OzOkulModel1.BAra_Result)">
+          <Parameter Name="BirimAdi" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="BEkle">
+            <Parameter Name="BirimAdi" Mode="In" Type="String" />
+            <Parameter Name="CalisanSayisi" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="BListele" ReturnType="Collection(OzOkulModel1.BListele_Result)" />
+          <FunctionImport Name="BSil">
+          <Parameter Name="BirimNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="BYenile">
+            <Parameter Name="BirimNo" Mode="In" Type="Int32" />
+            <Parameter Name="BirimAdi" Mode="In" Type="String" />
+            <Parameter Name="CalisanSayisi" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CAra" ReturnType="Collection(OzOkulModel1.CAra_Result)">
+          <Parameter Name="AdSoyad" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="CEkle">
+            <Parameter Name="AdSoyad" Mode="In" Type="String" />
+            <Parameter Name="Cinsiyet" Mode="In" Type="String" />
+            <Parameter Name="DogumTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="PersonelNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CListele" ReturnType="Collection(OzOkulModel1.CListele_Result)" />
+          <FunctionImport Name="CSil">
+          <Parameter Name="CocukNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CYenile">
+            <Parameter Name="CocukNo" Mode="In" Type="Int32" />
+            <Parameter Name="AdSoyad" Mode="In" Type="String" />
+            <Parameter Name="Cinsiyet" Mode="In" Type="String" />
+            <Parameter Name="DogumTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="PersonelNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GAra" ReturnType="Collection(OzOkulModel1.GAra_Result)">
+          <Parameter Name="GorevTanimi" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GEkle">
+            <Parameter Name="GorevTanimi" Mode="In" Type="String" />
+            <Parameter Name="GorevAdi" Mode="In" Type="String" />
+            <Parameter Name="GorevPuani" Mode="In" Type="Int32" />
+            <Parameter Name="BirimNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GListele" ReturnType="Collection(OzOkulModel1.GListele_Result)" />
+          <FunctionImport Name="GSil">
+          <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GYenile">
+            <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+            <Parameter Name="GorevTanimi" Mode="In" Type="String" />
+            <Parameter Name="GorevAdi" Mode="In" Type="String" />
+            <Parameter Name="GorevPuani" Mode="In" Type="Int32" />
+            <Parameter Name="BirimNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PeAra">
+          <Parameter Name="AdSoyad" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="PeEkle">
+            <Parameter Name="AdSoyad" Mode="In" Type="String" />
+            <Parameter Name="Cinsiyet" Mode="In" Type="String" />
+            <Parameter Name="BaslamaTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="VardiyaDurumu" Mode="In" Type="String" />
+            <Parameter Name="Maas" Mode="In" Type="Decimal" />
+            <Parameter Name="Prim" Mode="In" Type="Int32" />
+            <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+            <Parameter Name="UnvanNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PEkle">
+            <Parameter Name="PlanAdi" Mode="In" Type="String" />
+            <Parameter Name="PlanBakanlik" Mode="In" Type="String" />
+            <Parameter Name="TarimNo" Mode="In" Type="Int32" />
+            <Parameter Name="PlanSorumlusu" Mode="In" Type="String" />
+            <Parameter Name="Plantutanak" Mode="In" Type="String" />
+            <Parameter Name="PlanOdenek" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="PeListele" ReturnType="Collection(OzOkulModel1.PeListele_Result)" />
+          <FunctionImport Name="PeYenile">
+            <Parameter Name="PersonelNo" Mode="In" Type="Int32" />
+            <Parameter Name="AdSoyad" Mode="In" Type="String" />
+            <Parameter Name="Cinsiyet" Mode="In" Type="String" />
+            <Parameter Name="BaslamaTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="VardiyaDurumu" Mode="In" Type="String" />
+            <Parameter Name="Maas" Mode="In" Type="Decimal" />
+            <Parameter Name="Prim" Mode="In" Type="Int32" />
+            <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+            <Parameter Name="UnvanNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PrAra" ReturnType="Collection(OzOkulModel1.PrAra_Result)">
+          <Parameter Name="ProjeAd" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="PrEkle">
+            <Parameter Name="ProjeAd" Mode="In" Type="String" />
+            <Parameter Name="BaslamaTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="BitisTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PrListele" ReturnType="Collection(OzOkulModel1.PrListele_Result)" />
+          <FunctionImport Name="PrSil">
+          <Parameter Name="ProjeNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PrYenile">
+            <Parameter Name="ProjeNo" Mode="In" Type="Int32" />
+            <Parameter Name="ProjeAd" Mode="In" Type="String" />
+            <Parameter Name="BaslamaTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="BitisTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="GorevNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UAra" ReturnType="Collection(OzOkulModel1.UAra_Result)">
+          <Parameter Name="UnvanAdi" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UEkle">
+          <Parameter Name="UnvanAdi" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UListele" ReturnType="Collection(OzOkulModel1.UListele_Result)" />
+          <FunctionImport Name="USil">
+          <Parameter Name="UnvanNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UYenile">
+            <Parameter Name="UnvanNo" Mode="In" Type="Int32" />
+            <Parameter Name="UnvanAdi" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="PeSil">
+            <Parameter Name="PersonelNo" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="BAra_Result">
+          <Property Type="Int32" Name="BirimNo" Nullable="false" />
+          <Property Type="String" Name="BirimAdi" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="CalisanSayisi" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="BListele_Result">
+          <Property Type="Int32" Name="BirimNo" Nullable="false" />
+          <Property Type="String" Name="BirimAdi" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="CalisanSayisi" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CAra_Result">
+          <Property Type="Int32" Name="CocukNo" Nullable="false" />
+          <Property Type="String" Name="AdSoyad" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Cinsiyet" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="DogumTarihi" Nullable="true" />
+          <Property Type="Int32" Name="PersonelNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CListele_Result">
+          <Property Type="Int32" Name="CocukNo" Nullable="false" />
+          <Property Type="String" Name="AdSoyad" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Cinsiyet" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="DogumTarihi" Nullable="true" />
+          <Property Type="Int32" Name="PersonelNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GAra_Result">
+          <Property Type="Int32" Name="GorevNo" Nullable="false" />
+          <Property Type="String" Name="GorevTanimi" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="GorevAdi" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="GorevPuani" Nullable="true" />
+          <Property Type="Int32" Name="BirimNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GListele_Result">
+          <Property Type="Int32" Name="GorevNo" Nullable="false" />
+          <Property Type="String" Name="GorevTanimi" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="GorevAdi" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="GorevPuani" Nullable="true" />
+          <Property Type="Int32" Name="BirimNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="PeListele_Result">
+          <Property Type="Int32" Name="PersonelNo" Nullable="false" />
+          <Property Type="String" Name="AdSoyad" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Cinsiyet" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="BaslamaTarihi" Nullable="true" />
+          <Property Type="String" Name="VardiyaDurumu" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Maas" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="Prim" Nullable="true" />
+          <Property Type="Int32" Name="GorevNo" Nullable="true" />
+          <Property Type="Int32" Name="UnvanNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="PrAra_Result">
+          <Property Type="Int32" Name="ProjeNo" Nullable="false" />
+          <Property Type="String" Name="ProjeAd" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="BaslamaTarihi" Nullable="true" />
+          <Property Type="DateTime" Name="BitisTarihi" Nullable="true" />
+          <Property Type="Int32" Name="GorevNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="PrListele_Result">
+          <Property Type="Int32" Name="ProjeNo" Nullable="false" />
+          <Property Type="String" Name="ProjeAd" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="BaslamaTarihi" Nullable="true" />
+          <Property Type="DateTime" Name="BitisTarihi" Nullable="true" />
+          <Property Type="Int32" Name="GorevNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="UAra_Result">
+          <Property Type="Int32" Name="UnvanNo" Nullable="false" />
+          <Property Type="String" Name="UnvanAdi" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="UListele_Result">
+          <Property Type="Int32" Name="UnvanNo" Nullable="false" />
+          <Property Type="String" Name="UnvanAdi" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OzOkulModel1StoreContainer" CdmEntityContainer="OzOkulEntities1">
+          <EntitySetMapping Name="Birimlers">
+            <EntityTypeMapping TypeName="OzOkulModel1.Birimler">
+              <MappingFragment StoreEntitySet="Birimler">
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+                <ScalarProperty Name="BirimAdi" ColumnName="BirimAdi" />
+                <ScalarProperty Name="CalisanSayisi" ColumnName="CalisanSayisi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cocuks">
+            <EntityTypeMapping TypeName="OzOkulModel1.Cocuk">
+              <MappingFragment StoreEntitySet="Cocuk">
+                <ScalarProperty Name="CocukNo" ColumnName="CocukNo" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="Cinsiyet" ColumnName="Cinsiyet" />
+                <ScalarProperty Name="DogumTarihi" ColumnName="DogumTarihi" />
+                <ScalarProperty Name="PersonelNo" ColumnName="PersonelNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gorevs">
+            <EntityTypeMapping TypeName="OzOkulModel1.Gorev">
+              <MappingFragment StoreEntitySet="Gorev">
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+                <ScalarProperty Name="GorevTanimi" ColumnName="GorevTanimi" />
+                <ScalarProperty Name="GorevAdi" ColumnName="GorevAdi" />
+                <ScalarProperty Name="GorevPuani" ColumnName="GorevPuani" />
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Personel1">
+            <EntityTypeMapping TypeName="OzOkulModel1.Personel1">
+              <MappingFragment StoreEntitySet="Personel1">
+                <ScalarProperty Name="PersonelNo" ColumnName="PersonelNo" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="Cinsiyet" ColumnName="Cinsiyet" />
+                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
+                <ScalarProperty Name="VardiyaDurumu" ColumnName="VardiyaDurumu" />
+                <ScalarProperty Name="Maas" ColumnName="Maas" />
+                <ScalarProperty Name="Prim" ColumnName="Prim" />
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+                <ScalarProperty Name="UnvanNo" ColumnName="UnvanNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projes">
+            <EntityTypeMapping TypeName="OzOkulModel1.Proje">
+              <MappingFragment StoreEntitySet="Proje">
+                <ScalarProperty Name="ProjeNo" ColumnName="ProjeNo" />
+                <ScalarProperty Name="ProjeAd" ColumnName="ProjeAd" />
+                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
+                <ScalarProperty Name="BitisTarihi" ColumnName="BitisTarihi" />
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Unvanlars">
+            <EntityTypeMapping TypeName="OzOkulModel1.Unvanlar">
+              <MappingFragment StoreEntitySet="Unvanlar">
+                <ScalarProperty Name="UnvanNo" ColumnName="UnvanNo" />
+                <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="BAra" FunctionName="OzOkulModel1.Store.BAra">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.BAra_Result">
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+                <ScalarProperty Name="BirimAdi" ColumnName="BirimAdi" />
+                <ScalarProperty Name="CalisanSayisi" ColumnName="CalisanSayisi" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="BEkle" FunctionName="OzOkulModel1.Store.BEkle" />
+          <FunctionImportMapping FunctionImportName="BListele" FunctionName="OzOkulModel1.Store.BListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.BListele_Result">
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+                <ScalarProperty Name="BirimAdi" ColumnName="BirimAdi" />
+                <ScalarProperty Name="CalisanSayisi" ColumnName="CalisanSayisi" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="BSil" FunctionName="OzOkulModel1.Store.BSil" />
+          <FunctionImportMapping FunctionImportName="BYenile" FunctionName="OzOkulModel1.Store.BYenile" />
+          <FunctionImportMapping FunctionImportName="CAra" FunctionName="OzOkulModel1.Store.CAra">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.CAra_Result">
+                <ScalarProperty Name="CocukNo" ColumnName="CocukNo" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="Cinsiyet" ColumnName="Cinsiyet" />
+                <ScalarProperty Name="DogumTarihi" ColumnName="DogumTarihi" />
+                <ScalarProperty Name="PersonelNo" ColumnName="PersonelNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CEkle" FunctionName="OzOkulModel1.Store.CEkle" />
+          <FunctionImportMapping FunctionImportName="CListele" FunctionName="OzOkulModel1.Store.CListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.CListele_Result">
+                <ScalarProperty Name="CocukNo" ColumnName="CocukNo" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="Cinsiyet" ColumnName="Cinsiyet" />
+                <ScalarProperty Name="DogumTarihi" ColumnName="DogumTarihi" />
+                <ScalarProperty Name="PersonelNo" ColumnName="PersonelNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CSil" FunctionName="OzOkulModel1.Store.CSil" />
+          <FunctionImportMapping FunctionImportName="CYenile" FunctionName="OzOkulModel1.Store.CYenile" />
+          <FunctionImportMapping FunctionImportName="GAra" FunctionName="OzOkulModel1.Store.GAra">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.GAra_Result">
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+                <ScalarProperty Name="GorevTanimi" ColumnName="GorevTanimi" />
+                <ScalarProperty Name="GorevAdi" ColumnName="GorevAdi" />
+                <ScalarProperty Name="GorevPuani" ColumnName="GorevPuani" />
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GEkle" FunctionName="OzOkulModel1.Store.GEkle" />
+          <FunctionImportMapping FunctionImportName="GListele" FunctionName="OzOkulModel1.Store.GListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.GListele_Result">
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+                <ScalarProperty Name="GorevTanimi" ColumnName="GorevTanimi" />
+                <ScalarProperty Name="GorevAdi" ColumnName="GorevAdi" />
+                <ScalarProperty Name="GorevPuani" ColumnName="GorevPuani" />
+                <ScalarProperty Name="BirimNo" ColumnName="BirimNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GSil" FunctionName="OzOkulModel1.Store.GSil" />
+          <FunctionImportMapping FunctionImportName="GYenile" FunctionName="OzOkulModel1.Store.GYenile" />
+          <FunctionImportMapping FunctionImportName="PeAra" FunctionName="OzOkulModel1.Store.PeAra" />
+          <FunctionImportMapping FunctionImportName="PeEkle" FunctionName="OzOkulModel1.Store.PeEkle" />
+          <FunctionImportMapping FunctionImportName="PEkle" FunctionName="OzOkulModel1.Store.PEkle" />
+          <FunctionImportMapping FunctionImportName="PeListele" FunctionName="OzOkulModel1.Store.PeListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.PeListele_Result">
+                <ScalarProperty Name="PersonelNo" ColumnName="PersonelNo" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="Cinsiyet" ColumnName="Cinsiyet" />
+                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
+                <ScalarProperty Name="VardiyaDurumu" ColumnName="VardiyaDurumu" />
+                <ScalarProperty Name="Maas" ColumnName="Maas" />
+                <ScalarProperty Name="Prim" ColumnName="Prim" />
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+                <ScalarProperty Name="UnvanNo" ColumnName="UnvanNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="PeYenile" FunctionName="OzOkulModel1.Store.PeYenile" />
+          <FunctionImportMapping FunctionImportName="PrAra" FunctionName="OzOkulModel1.Store.PrAra">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.PrAra_Result">
+                <ScalarProperty Name="ProjeNo" ColumnName="ProjeNo" />
+                <ScalarProperty Name="ProjeAd" ColumnName="ProjeAd" />
+                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
+                <ScalarProperty Name="BitisTarihi" ColumnName="BitisTarihi" />
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="PrEkle" FunctionName="OzOkulModel1.Store.PrEkle" />
+          <FunctionImportMapping FunctionImportName="PrListele" FunctionName="OzOkulModel1.Store.PrListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.PrListele_Result">
+                <ScalarProperty Name="ProjeNo" ColumnName="ProjeNo" />
+                <ScalarProperty Name="ProjeAd" ColumnName="ProjeAd" />
+                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
+                <ScalarProperty Name="BitisTarihi" ColumnName="BitisTarihi" />
+                <ScalarProperty Name="GorevNo" ColumnName="GorevNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="PrSil" FunctionName="OzOkulModel1.Store.PrSil" />
+          <FunctionImportMapping FunctionImportName="PrYenile" FunctionName="OzOkulModel1.Store.PrYenile" />
+          <FunctionImportMapping FunctionImportName="UAra" FunctionName="OzOkulModel1.Store.UAra">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.UAra_Result">
+                <ScalarProperty Name="UnvanNo" ColumnName="UnvanNo" />
+                <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UEkle" FunctionName="OzOkulModel1.Store.UEkle" />
+          <FunctionImportMapping FunctionImportName="UListele" FunctionName="OzOkulModel1.Store.UListele">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OzOkulModel1.UListele_Result">
+                <ScalarProperty Name="UnvanNo" ColumnName="UnvanNo" />
+                <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USil" FunctionName="OzOkulModel1.Store.USil" />
+          <FunctionImportMapping FunctionImportName="UYenile" FunctionName="OzOkulModel1.Store.UYenile" />
+          <FunctionImportMapping FunctionImportName="PeSil" FunctionName="OzOkulModel1.Store.PeSil" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
